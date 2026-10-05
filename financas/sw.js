@@ -1,9 +1,12 @@
-const CACHE = "financas-v2";
+const CACHE = "financas-v3";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./app.part0.b64",
+  "./app.part1.b64",
+  "./app.part2.b64",
   "./manifest.json",
   "./icons/icon.svg",
   "./icons/icon-192.png",
