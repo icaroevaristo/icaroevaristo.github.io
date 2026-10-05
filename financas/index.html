@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="Finanças pessoais — controle de gastos e assinaturas offline" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Finanças" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>Finanças — Icaro</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <h1>💰 Finanças</h1>
+        <p class="subtitle">Icaro Evaristo</p>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- DASHBOARD -->
+      <section id="view-dashboard" class="view active">
+        <div class="cards">
+          <div class="card card-hoje">
+            <span class="card-label">Hoje</span>
+            <span class="card-value" id="total-hoje">R$&nbsp;0,00</span>
+          </div>
+          <div class="card card-mes">
+            <span class="card-label">Este mês</span>
+            <span class="card-value" id="total-mes">R$&nbsp;0,00</span>
+          </div>
+          <div class="card card-rec">
+            <span class="card-label">Recorrentes / mês</span>
+            <span class="card-value" id="total-rec">R$&nbsp;0,00</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Por categoria (mês)</h2>
+          </div>
+          <div id="cat-summary" class="cat-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Últimos gastos</h2>
+            <button type="button" class="link-btn" data-goto="despesas">Ver todos</button>
+          </div>
+          <div id="recent-list" class="item-list"></div>
+        </div>
+      </section>
+
+      <!-- DESPESAS -->
+      <section id="view-despesas" class="view">
+        <div class="toolbar">
+          <label class="month-picker">
+            <span class="sr-only">Mês</span>
+            <input type="month" id="filtro-mes" />
+          </label>
+          <button type="button" class="btn btn-primary" id="btn-nova-despesa">+ Nova</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Resumo do mês</h2>
+            <span class="badge" id="mes-total-badge">R$&nbsp;0,00</span>
+          </div>
+          <div id="mes-cat-bars" class="bars"></div>
+        </div>
+        <div id="despesa-list" class="item-list"></div>
+      </section>
+
+      <!-- RECORRENTES -->
+      <section id="view-recorrentes" class="view">
+        <div class="toolbar">
+          <p class="hint">Assinaturas e contas fixas (dia do mês)</p>
+          <button type="button" class="btn btn-primary" id="btn-nova-rec">+ Nova</button>
+        </div>
+        <div id="rec-list" class="item-list"></div>
+      </section>
+
+      <!-- AJUSTES -->
+      <section id="view-ajustes" class="view">
+        <div class="panel">
+          <h2>Backup</h2>
+          <p class="hint">Exporte seus dados em JSON ou importe um backup anterior.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-secondary" id="btn-export">Exportar JSON</button>
+            <button type="button" class="btn btn-secondary" id="btn-import">Importar JSON</button>
+            <input type="file" id="import-file" accept="application/json,.json" hidden />
+          </div>
+        </div>
+        <div class="panel danger-zone">
+          <h2>Dados</h2>
+          <p class="hint">Apaga todas as despesas e recorrentes deste navegador.</p>
+          <button type="button" class="btn btn-danger" id="btn-clear">Limpar tudo</button>
+        </div>
+        <div class="panel">
+          <h2>Sobre</h2>
+          <p class="hint">App offline no seu celular. Dados ficam só neste navegador (localStorage). Adicione à tela inicial para usar como app.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <button type="button" class="nav-btn active" data-view="dashboard" aria-label="Início">
+        <span class="nav-icon">🏠</span>
+        <span>Início</span>
+      </button>
+      <button type="button" class="nav-btn" data-view="despesas" aria-label="Despesas">
+        <span class="nav-icon">🧾</span>
+        <span>Despesas</span>
+      </button>
+      <button type="button" class="nav-btn" data-view="recorrentes" aria-label="Recorrentes">
+        <span class="nav-icon">🔁</span>
+        <span>Fixos</span>
+      </button>
+      <button type="button" class="nav-btn" data-view="ajustes" aria-label="Ajustes">
+        <span class="nav-icon">⚙️</span>
+        <span>Ajustes</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- MODAL DESPESA -->
+  <dialog id="modal-despesa" class="modal">
+    <form method="dialog" id="form-despesa" class="modal-card">
+      <h2 id="modal-despesa-title">Nova despesa</h2>
+      <input type="hidden" id="despesa-id" />
+      <label>
+        Valor (R$)
+        <input type="number" id="despesa-valor" inputmode="decimal" step="0.01" min="0.01" required placeholder="0,00" />
+      </label>
+      <label>
+        Categoria
+        <select id="despesa-categoria" required></select>
+      </label>
+      <label>
+        Data
+        <input type="date" id="despesa-data" required />
+      </label>
+      <label>
+        Nota <span class="optional">(opcional)</span>
+        <input type="text" id="despesa-nota" maxlength="120" placeholder="Ex.: almoço, Uber…" />
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="despesa-cancel">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL RECORRENTE -->
+  <dialog id="modal-rec" class="modal">
+    <form method="dialog" id="form-rec" class="modal-card">
+      <h2 id="modal-rec-title">Novo recorrente</h2>
+      <input type="hidden" id="rec-id" />
+      <label>
+        Nome
+        <input type="text" id="rec-nome" maxlength="80" required placeholder="Ex.: Netflix, aluguel…" />
+      </label>
+      <label>
+        Valor (R$)
+        <input type="number" id="rec-valor" inputmode="decimal" step="0.01" min="0.01" required placeholder="0,00" />
+      </label>
+      <label>
+        Dia do mês
+        <input type="number" id="rec-dia" inputmode="numeric" min="1" max="31" required placeholder="1–31" />
+      </label>
+      <label>
+        Categoria
+        <select id="rec-categoria" required></select>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="rec-cancel">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
