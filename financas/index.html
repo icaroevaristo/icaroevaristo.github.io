@@ -41,6 +41,10 @@
           </div>
         </div>
 
+        <button type="button" class="btn btn-primary btn-gasto-home" id="btn-gasto-home">
+          + Gasto
+        </button>
+
         <div class="panel">
           <div class="panel-head">
             <h2>Por categoria (mês)</h2>
@@ -130,12 +134,12 @@
 
   <!-- MODAL DESPESA -->
   <dialog id="modal-despesa" class="modal">
-    <form method="dialog" id="form-despesa" class="modal-card">
+    <form id="form-despesa" class="modal-card">
       <h2 id="modal-despesa-title">Nova despesa</h2>
       <input type="hidden" id="despesa-id" />
       <label>
         Valor (R$)
-        <input type="number" id="despesa-valor" inputmode="decimal" step="0.01" min="0.01" required placeholder="0,00" />
+        <input type="text" id="despesa-valor" inputmode="decimal" required placeholder="0,00" autocomplete="off" />
       </label>
       <label>
         Categoria
@@ -158,7 +162,7 @@
 
   <!-- MODAL RECORRENTE -->
   <dialog id="modal-rec" class="modal">
-    <form method="dialog" id="form-rec" class="modal-card">
+    <form id="form-rec" class="modal-card">
       <h2 id="modal-rec-title">Novo recorrente</h2>
       <input type="hidden" id="rec-id" />
       <label>
@@ -167,7 +171,7 @@
       </label>
       <label>
         Valor (R$)
-        <input type="number" id="rec-valor" inputmode="decimal" step="0.01" min="0.01" required placeholder="0,00" />
+        <input type="text" id="rec-valor" inputmode="decimal" required placeholder="0,00" autocomplete="off" />
       </label>
       <label>
         Dia do mês
