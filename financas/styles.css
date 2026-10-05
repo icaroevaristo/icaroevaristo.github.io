@@ -451,3 +451,34 @@ body {
 @media (min-width: 480px) {
   .card-value { font-size: 1.35rem; }
 }
+
+
+.btn-gasto-home {
+  width: 100%;
+  margin-bottom: 14px;
+  min-height: 56px;
+  font-size: 1.15rem;
+  font-weight: 750;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Class-based dialog fallback when showModal is unavailable */
+dialog.modal.is-open,
+html.modal-open dialog.modal[open] {
+  display: block;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 40;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}
+
+html.modal-open::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 35;
+}
